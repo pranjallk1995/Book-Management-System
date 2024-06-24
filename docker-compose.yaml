@@ -12,14 +12,30 @@ services:
     container_name: book-manager-app
     build:
       dockerfile: ./Dockerfile.app
-    environment: *database-authentication
+    environment:
+      <<: *database-authentication
+      POSTGRES_SERVICE: postgre-database
     networks:
       - book-network
     volumes:
       - ./app:/app
     depends_on:
       - postgre-database
-    command: python3 main.py
+    ports:
+      - 15000:5000
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: nvidia-smi
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    command: ["python3", "-m", "main"]
 
   postgre-database:
     image: postgres/book-manager:v0.0.1
@@ -29,8 +45,6 @@ services:
     restart: unless-stopped
     shm_size: 128mb
     environment: *database-authentication
-    ports:
-      - 15432:5432
     volumes:
       - ./postgre-data:/var/lib/postgresql/data
     networks:
