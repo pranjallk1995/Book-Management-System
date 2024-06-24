@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+
+  postgre-database:
+    image: postgres/book-manager:v0.0.1
+    container_name: postgres-db
+    build:
+      dockerfile: ./Dockerfile.database
+    restart: unless-stopped
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: librarian
+      POSTGRES_PASSWORD: j^8d94asTq#v
+      POSTGRES_DB: book-store
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - book-network
+  database-adminer:
+    image: adminer
+    container_name: db-adminer
+    restart: unless-stopped
+    ports:
+      - 18080:8080
+    networks:
+      - book-network
+
+networks:
+  book-network:
+    name: book-network
+    driver: bridge
+    external: false
