@@ -2,9 +2,37 @@ version: '3.9'
 
 services:
 
+  book-manager:
+    image: tensorflow/book-manager:v0.0.1
+    container_name: book-manager-app
+    build:
+      dockerfile: ./Dockerfile.app
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - book-network
+    volumes:
+      - ./app:/app
+    volumes_from:
+      - postgre-database
+    depends_on: 
+      - postgre-database
+    healthcheck:
+      test: nvidia-smi
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    command: sleep infinity
+
   postgre-database:
     image: postgres/book-manager:v0.0.1
-    container_name: postgres-db
+    container_name: postgre-db
     build:
       dockerfile: ./Dockerfile.database
     restart: unless-stopped
@@ -14,7 +42,8 @@ services:
       POSTGRES_PASSWORD: j^8d94asTq#v
       POSTGRES_DB: book-store
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./postgre-data:/var/lib/postgresql/data
+      - book-volume:/var/run
     networks:
       - book-network
   database-adminer:
@@ -25,6 +54,11 @@ services:
       - 18080:8080
     networks:
       - book-network
+
+volumes:
+  book-volume:
+    name: book-volume
+    external: false
 
 networks:
   book-network:
