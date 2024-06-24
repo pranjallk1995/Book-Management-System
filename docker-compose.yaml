@@ -1,5 +1,10 @@
 version: '3.9'
 
+x-user-credentials: &database-authentication
+  POSTGRES_USER: librarian
+  POSTGRES_PASSWORD: j^8d94asTq#v
+  POSTGRES_DB: book-store
+
 services:
 
   book-manager:
@@ -7,28 +12,14 @@ services:
     container_name: book-manager-app
     build:
       dockerfile: ./Dockerfile.app
-    restart: unless-stopped
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+    environment: *database-authentication
     networks:
       - book-network
     volumes:
       - ./app:/app
-    volumes_from:
-      - postgre-database
     depends_on: 
       - postgre-database
-    healthcheck:
-      test: nvidia-smi
-      interval: 5s
-      timeout: 5s
-      retries: 3
-    command: sleep infinity
+    command: python3 main.py
 
   postgre-database:
     image: postgres/book-manager:v0.0.1
@@ -37,28 +28,13 @@ services:
       dockerfile: ./Dockerfile.database
     restart: unless-stopped
     shm_size: 128mb
-    environment:
-      POSTGRES_USER: librarian
-      POSTGRES_PASSWORD: j^8d94asTq#v
-      POSTGRES_DB: book-store
+    environment: *database-authentication
+    ports:
+      - 15432:5432
     volumes:
       - ./postgre-data:/var/lib/postgresql/data
-      - book-volume:/var/run
     networks:
       - book-network
-  database-adminer:
-    image: adminer
-    container_name: db-adminer
-    restart: unless-stopped
-    ports:
-      - 18080:8080
-    networks:
-      - book-network
-
-volumes:
-  book-volume:
-    name: book-volume
-    external: false
 
 networks:
   book-network:
