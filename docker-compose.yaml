@@ -17,7 +17,7 @@ services:
       - book-network
     volumes:
       - ./app:/app
-    depends_on: 
+    depends_on:
       - postgre-database
     command: python3 main.py
 
