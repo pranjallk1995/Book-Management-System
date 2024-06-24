@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 postgres-data
+.vscode/
 
 # C extensions
 *.so
@@ -36,6 +37,7 @@ MANIFEST
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+*.log
 
 # Unit test / coverage reports
 htmlcov/
