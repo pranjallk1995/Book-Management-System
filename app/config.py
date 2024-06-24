@@ -1,3 +1,5 @@
+""" module to store all application level constants and configuration values """
+
 import os
 
 # DATABASE CONNECTION SETTINGS
