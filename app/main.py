@@ -11,4 +11,3 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, filename="run.log", filemode="w")
     data_creator = CreateData()
     asyncio.run(data_creator.create_tables())
-    st.title("Book Store")

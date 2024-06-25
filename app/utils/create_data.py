@@ -3,8 +3,6 @@
 import logging as lg
 import config as cfg
 import asyncpg as apg
-
-
 class CreateData():
     """ create the bookstore database schema and book data """
 
@@ -59,3 +57,11 @@ class CreateData():
 
         create_status = await connection.execute(create_reviews_table)
         self.check_status(create_status, cfg.DatabaseTables.REVIEWS)
+
+    async def create_data(self) -> None:
+        """ function to add dummy data into database """
+        pass
+
+    async def run(self) -> None:
+        """ module entrypoint """
+        pass
