@@ -3,7 +3,6 @@
 import asyncio
 import logging
 
-import config as cfg
 import streamlit as st
 
 from utils.create_data import CreateData
