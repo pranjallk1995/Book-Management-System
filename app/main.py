@@ -12,4 +12,4 @@ if __name__ == "__main__":
     data_creator = CreateData()
     asyncio.run(data_creator.run())
 
-    CreateWebpage().show_frontend()
+    CreateWebpage(data_creator).show_frontend()
