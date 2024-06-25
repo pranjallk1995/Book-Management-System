@@ -13,17 +13,6 @@ class CreateData():
         self.host = cfg.DATABASE_SERVICE
         self.connection = None
 
-    def check_status(self, status: str, table: cfg.DatabaseTables) -> None:
-        """ check if creating table was successful """
-        if "NOTICE" not in status:
-            lg.info(" Table: %s has been created", table.value)
-        elif "NOTICE" in status:
-            lg.info(" Table: %s already exists", table.value)
-        elif "INSERT" in status:
-            lg.info(" Default data added to Table: %s", table.value)
-        else:
-            lg.error(" Failed to create Table: %s", table.value)
-
     async def create_tables(self) -> None:
         """ function to create tables if they do not exist """
 
@@ -54,11 +43,8 @@ class CreateData():
             );
         """
 
-        create_status = await self.connection.execute(create_book_table)
-        self.check_status(create_status, cfg.DatabaseTables.BOOKS)
-
-        create_status = await self.connection.execute(create_reviews_table)
-        self.check_status(create_status, cfg.DatabaseTables.REVIEWS)
+        await self.connection.execute(create_book_table)
+        await self.connection.execute(create_reviews_table)
 
     async def create_data(self) -> None:
         """ function to add default data into database """
@@ -140,11 +126,15 @@ class CreateData():
             )
         """
 
-        create_status = await self.connection.execute(add_book_data)
-        self.check_status(create_status, cfg.DatabaseTables.BOOKS)
+        await self.connection.execute(add_book_data)
+        await self.connection.execute(add_review_data)
 
-        create_status = await self.connection.execute(add_review_data)
-        self.check_status(create_status, cfg.DatabaseTables.REVIEWS)
+    async def drop_tables(self) -> None:
+        try:
+            await self.connection.execute(f"DROP TABLE {cfg.DatabaseTables.REVIEWS.value}")
+            await self.connection.execute(f"DROP TABLE {cfg.DatabaseTables.BOOKS.value}")
+        except:
+            lg.debug(" Required tables do not exist")
 
     async def run(self) -> None:
         """ module entrypoint """
@@ -152,7 +142,11 @@ class CreateData():
             user=self.user, password=self.password, database=self.database, host=self.host
         )
         if self.connection is not None:
+            await self.drop_tables()
             await self.create_tables()
+            lg.debug(" Fresh tables %s and %s created", cfg.DatabaseTables.BOOKS.value, cfg.DatabaseTables.REVIEWS.value)
             await self.create_data()
+            lg.debug(" Default data added to the tables")
+            lg.info(" Database restored to default state")
         else:
             lg.error("Could not connect to database")
