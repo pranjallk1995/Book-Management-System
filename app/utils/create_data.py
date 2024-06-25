@@ -3,6 +3,7 @@
 import logging as lg
 import config as cfg
 import asyncpg as apg
+
 class CreateData():
     """ create the bookstore database schema and book data """
 

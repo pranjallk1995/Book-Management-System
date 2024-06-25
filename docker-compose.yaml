@@ -35,7 +35,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
-    command: ["streamlit", "run", "main.py", "--server.port", "5000"]
+    command: ["python3", "-m", "streamlit", "run", "main.py", "--server.port", "5000"]
 
   postgres-database:
     image: postgres/book-manager:v0.0.1
