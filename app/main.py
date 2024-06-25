@@ -1,29 +1,13 @@
 """ app entrypoint """
 
-import logging
 import asyncio
-import asyncpg
+import logging
 
-import config as cfg
+import streamlit as st
 
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route("/")
-def hello():
-    asyncio.run(run())
-    return "Hello, World!"
-
-async def run():
-    conn = await asyncpg.connect(
-        user=cfg.DATABASE_USER, password=cfg.DATABASE_USER_PASSWORD,
-        database=cfg.DATABASE_NAME, host=cfg.DATABASE_SERVICE
-    )
-    values = await conn.fetch('SELECT * FROM accounts')
-    logging.info("values: %s", values)
-    await conn.close()
+from utils.create_data import CreateData
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG, filename="run.log", filemode="w")
-    app.run(host="0.0.0.0", port=5000)
+    logging.basicConfig(level=logging.INFO, filename="run.log", filemode="w")
+    data_creator = CreateData()
+    asyncio.run(data_creator.run())

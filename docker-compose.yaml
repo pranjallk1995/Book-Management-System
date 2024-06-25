@@ -14,13 +14,13 @@ services:
       dockerfile: ./Dockerfile.app
     environment:
       <<: *database-authentication
-      POSTGRES_SERVICE: postgre-database
+      POSTGRES_SERVICE: postgres-database
     networks:
       - book-network
     volumes:
       - ./app:/app
     depends_on:
-      - postgre-database
+      - postgres-database
     ports:
       - 15000:5000
     deploy:
@@ -35,18 +35,27 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
-    command: ["python3", "-m", "main"]
+    command: ["streamlit", "run", "main.py", "--server.port", "5000"]
 
-  postgre-database:
+  postgres-database:
     image: postgres/book-manager:v0.0.1
-    container_name: postgre-db
+    container_name: postgres-db
     build:
       dockerfile: ./Dockerfile.database
     restart: unless-stopped
     shm_size: 128mb
     environment: *database-authentication
     volumes:
-      - ./postgre-data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - book-network
+
+  adminer:
+    image: adminer
+    container_name: db-adminer
+    restart: always
+    ports:
+      - 18080:8080
     networks:
       - book-network
 

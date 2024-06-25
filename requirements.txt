@@ -1,2 +1,2 @@
 asyncpg == 0.29.0
-Flask == 3.0.3
+streamlit == 1.36.0
