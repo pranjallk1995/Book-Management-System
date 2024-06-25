@@ -10,4 +10,4 @@ class CreateWebpage():
 
     def show_frontend(self) -> None:
         """ module entrypoint """
-        pass
+        st.title("Book Store")
