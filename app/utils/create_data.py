@@ -123,7 +123,7 @@ class CreateData():
                 '3', '5', 'The quality of the pages is not good. The marks for the words of the other page can be seen on the current one.', '3'
             ), (
                 '3', '6', 'Nice book', '5'
-            )
+            );
         """
 
         await self.connection.execute(add_book_data)
@@ -131,8 +131,8 @@ class CreateData():
 
     async def drop_tables(self) -> None:
         try:
-            await self.connection.execute(f"DROP TABLE {cfg.DatabaseTables.REVIEWS.value}")
-            await self.connection.execute(f"DROP TABLE {cfg.DatabaseTables.BOOKS.value}")
+            await self.connection.execute(f"DROP TABLE {cfg.DatabaseTables.REVIEWS.value};")
+            await self.connection.execute(f"DROP TABLE {cfg.DatabaseTables.BOOKS.value};")
         except:
             lg.debug(" Required tables do not exist")
 
