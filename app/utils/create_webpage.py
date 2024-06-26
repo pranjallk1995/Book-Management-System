@@ -23,7 +23,9 @@ class CreateWebpage():
 
         all_books = await self.data_handler.get_all_books()
         st.sidebar.title("\n\n")
-        book_selected = st.sidebar.selectbox("Select Your Book", all_books, index=None, placeholder="Your Book")
+        book_selected = st.sidebar.selectbox(
+            "Select Your Book", all_books, index=None, placeholder="Your Book"
+        )
 
         if reset_button:
             await self.data_handler.run()
