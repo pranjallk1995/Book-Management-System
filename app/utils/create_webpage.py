@@ -13,13 +13,28 @@ class CreateWebpage():
         self.data_loader = LoadData()
         self.data_handler = data_handler
 
-    async def make_bookdiv(self, book: str) -> None:
+    async def make_reviewdiv(self, book_id: str) -> str:
+        """ function to make review text area for adding a review """
+        rating = st.slider("Your Rating:", 0, 5, 4)
+        review = st.text_area(
+            label=cfg.USER_ID, placeholder="Your review...",
+            label_visibility="hidden", max_chars=6999
+        )
+        if review:
+            return {
+                cfg.Reviews.BOOK_ID.value: str(book_id),
+                cfg.Reviews.USER_ID.value: cfg.USER_ID,
+                cfg.Reviews.REVIEW.value: review,
+                cfg.Reviews.RATING.value: str(rating)
+            }
+
+    async def make_bookdiv(self, book: str) -> str:
         """ function to update the maindiv when a book is selected """
         st.title(book.upper())
         all_reviews = await self.data_handler.get_reviews(book)
         st.subheader("Reviews")
-        for review in all_reviews:
-            st.text_area(label="", value=review, disabled=True)
+        for index, review in enumerate(all_reviews):
+            st.text_area(label=str(index), value=review, disabled=True, label_visibility="hidden", key=index)
 
     async def make_sidebar(self) -> None:
         """ function to create the sidebar of the UI """
@@ -41,6 +56,17 @@ class CreateWebpage():
             await self.make_maindiv()
         else:
             await self.make_bookdiv(book_selected)
+            st.divider()
+            add_review = st.button("Add Review", type="primary")
+            print(add_review)
+            if add_review:
+                book_id = await self.data_handler.get_bookid(book_selected)
+                print(book_id)
+                review_data = await self.make_reviewdiv(book_id)
+                print(review_data)
+                if review_data:
+                    await self.data_handler.add_data(cfg.DatabaseTables.REVIEWS, review_data)
+                    # await self.make_bookdiv(book_selected)
 
     async def make_maindiv(self) -> None:
         """ function to create the main central div in the UI """
