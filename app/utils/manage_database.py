@@ -20,10 +20,7 @@ class DatabaseHandler(CreateData):
         records = await self.connection.fetch(
             query=f"""SELECT * FROM {cfg.DatabaseTables.BOOKS.value}"""
         )
-        all_books = []
-        for record in records:
-            all_books.append(record[cfg.Books.TITLE.value])
-        return all_books
+        return [record[cfg.Books.TITLE.value] for record in records]
 
     def get_book(self, book: str) -> None:
         """ function to get book details from database """
