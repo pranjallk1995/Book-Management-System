@@ -39,3 +39,6 @@ class Ratings(Enum):
     THREE = 3
     FOUR = 4
     FIVE = 5
+
+BOOKS_COLUMNS = ["ID", "Title", "Author", "Genre", "Year", "Summary"]
+REVIEWS_COLUMNS = ["ID", "Book ID", "User ID", "Review", "Rating"]
