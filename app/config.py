@@ -40,5 +40,22 @@ class Ratings(Enum):
     FOUR = 4
     FIVE = 5
 
+class Books(Enum):
+    """ class to store books table schema """
+    ID ="id"
+    TITLE = "title"
+    AUTHOR = "author"
+    GENRE = "genre"
+    YEAR = "year_published"
+    SUMMARY = "summary"
+
+class Reviews(Enum):
+    """ class to store reviews table schema """
+    ID = "id"
+    BOOK_ID = "book_id"
+    USER_ID = "user_id"
+    REVIEW = "review_text"
+    RATING = "rating"
+
 BOOKS_COLUMNS = ["ID", "Title", "Author", "Genre", "Year", "Summary"]
 REVIEWS_COLUMNS = ["ID", "Book ID", "User ID", "Review", "Rating"]
