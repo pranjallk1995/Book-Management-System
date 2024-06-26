@@ -4,7 +4,6 @@ import pandas as pd
 import config as cfg
 import asyncpg as apg
 
-
 class LoadData():
     """ create the bookstore database schema and book data """
 
@@ -15,8 +14,8 @@ class LoadData():
         self.host = cfg.DATABASE_SERVICE
         self.connection = None
         self.column_names = {
-            "books": ["ID", "Title", "Author", "Genre", "Year", "Summary"],
-            "reviews": ["ID", "Book ID", "User ID", "Review", "Rating"]
+            cfg.DatabaseTables.BOOKS.value: cfg.BOOKS_COLUMNS,
+            cfg.DatabaseTables.REVIEWS.value: cfg.REVIEWS_COLUMNS
         }
 
     async def get_dataframe(self, table_name: str) -> pd.DataFrame:
