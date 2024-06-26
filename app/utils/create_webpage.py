@@ -15,10 +15,8 @@ class CreateWebpage():
         self.data_loader = LoadData()
         self.data_creator = data_creator
 
-    def show_frontend(self) -> None:
-        """ module entrypoint """
-
-        # sidebar
+    def make_sidebar(self) -> None:
+        """ function to create the sidebar of the UI """
         st.sidebar.title("Book Store")
         st.sidebar.divider()
         reset_button = st.sidebar.button("Reset Database", type="primary", use_container_width=True)
@@ -27,15 +25,21 @@ class CreateWebpage():
             asyncio.run(self.data_creator.run())
             st.toast("Database set to initial default value")
 
-        # main div
-        st.subheader("Books")
+    def make_maindiv(self) -> None:
+        """ function to create the main central div in the UI """
+        st.subheader(cfg.DatabaseTables.BOOKS.value)
         st.dataframe(
             asyncio.run(self.data_loader.get_dataframe(cfg.DatabaseTables.BOOKS.value)),
             hide_index=True, use_container_width=True
         )
         st.divider()
-        st.subheader("Reviews")
+        st.subheader(cfg.DatabaseTables.REVIEWS.value)
         st.dataframe(
             asyncio.run(self.data_loader.get_dataframe(cfg.DatabaseTables.REVIEWS.value)),
             hide_index=True, use_container_width=True
         )
+
+    def show_frontend(self) -> None:
+        """ module entrypoint """
+        self.make_sidebar()
+        self.make_maindiv()
