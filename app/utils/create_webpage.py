@@ -13,6 +13,14 @@ class CreateWebpage():
         self.data_loader = LoadData()
         self.data_handler = data_handler
 
+    async def make_bookdiv(self, book: str) -> None:
+        """ function to update the maindiv when a book is selected """
+        st.title(book.upper())
+        all_reviews = await self.data_handler.get_reviews(book)
+        st.subheader("Reviews")
+        for review in all_reviews:
+            st.text_area(label="", value=review, disabled=True)
+
     async def make_sidebar(self) -> None:
         """ function to create the sidebar of the UI """
         st.sidebar.title("Book Store".upper())
@@ -29,6 +37,11 @@ class CreateWebpage():
             await self.data_handler.run()
             st.toast("Database set to initial default value")
 
+        if book_selected is None:
+            await self.make_maindiv()
+        else:
+            await self.make_bookdiv(book_selected)
+
     async def make_maindiv(self) -> None:
         """ function to create the main central div in the UI """
         st.subheader(cfg.DatabaseTables.BOOKS.value.upper())
@@ -42,4 +55,3 @@ class CreateWebpage():
     async def show_frontend(self) -> None:
         """ module entrypoint """
         await self.make_sidebar()
-        await self.make_maindiv()

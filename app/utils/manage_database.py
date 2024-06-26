@@ -18,7 +18,7 @@ class DatabaseHandler(CreateData):
     async def get_all_books(self) -> dict:
         """ function to get all the available books """
         records = await self.connection.fetch(
-            query=f"""SELECT * FROM {cfg.DatabaseTables.BOOKS.value}"""
+            query=f"""SELECT * FROM {cfg.DatabaseTables.BOOKS.value};"""
         )
         return [record[cfg.Books.TITLE.value] for record in records]
 
@@ -26,6 +26,14 @@ class DatabaseHandler(CreateData):
         """ function to get book details from database """
         pass
 
-    def get_reviews(self, book: str) -> None:
+    async def get_reviews(self, book_title: str) -> None:
         """ function to get reviews for the book from database """
-        pass
+        records = await self.connection.fetch(
+            query=f"""
+            SELECT * FROM {cfg.DatabaseTables.REVIEWS.value}
+            INNER JOIN {cfg.DatabaseTables.BOOKS.value}
+            ON {cfg.DatabaseTables.BOOKS.value}.{cfg.Books.ID.value} = {cfg.DatabaseTables.REVIEWS.value}.{cfg.Reviews.BOOK_ID.value}
+            WHERE {cfg.DatabaseTables.BOOKS.value}.{cfg.Books.TITLE.value} = '{book_title}'
+            """
+        )
+        return [record[cfg.Reviews.REVIEW.value] for record in records]
