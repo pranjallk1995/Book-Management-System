@@ -60,10 +60,8 @@ class CreateWebpage():
             await self.make_bookdiv(book_selected)
             st.divider()
             add_review = st.button("Add Review", type="primary")
-            print(add_review)
             if add_review:
                 book_id = await self.data_handler.get_bookid(book_selected)
-                print(book_id)
                 review_data = await self.make_reviewdiv(book_id)
                 print(review_data)
                 if review_data:
