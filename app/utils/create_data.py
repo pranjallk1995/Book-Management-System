@@ -146,7 +146,11 @@ class CreateData():
         if self.connection is not None:
             await self.drop_tables()
             await self.create_tables()
-            lg.debug(" Fresh tables %s and %s created", cfg.DatabaseTables.BOOKS.value, cfg.DatabaseTables.REVIEWS.value)
+            lg.debug(
+                " Fresh tables %s and %s created",
+                cfg.DatabaseTables.BOOKS.value,
+                cfg.DatabaseTables.REVIEWS.value
+            )
             await self.create_data()
             lg.debug(" Default data added to the tables")
             lg.info(" Database restored to default state")
