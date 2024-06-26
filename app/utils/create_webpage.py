@@ -34,7 +34,9 @@ class CreateWebpage():
         all_reviews = await self.data_handler.get_reviews(book)
         st.subheader("Reviews")
         for index, review in enumerate(all_reviews):
-            st.text_area(label=str(index), value=review, disabled=True, label_visibility="hidden", key=index)
+            st.text_area(
+                label=str(index), value=review, disabled=True, label_visibility="hidden", key=index
+            )
 
     async def make_sidebar(self) -> None:
         """ function to create the sidebar of the UI """
