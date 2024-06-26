@@ -50,8 +50,15 @@ class CreateData():
     async def create_data(self) -> None:
         """ function to add default data into database """
 
+        book_columns = ", ".join(
+            [column.value if column.value != cfg.Books.ID.value else "" for column in cfg.Books]
+        )[1:]
+        review_columns = ", ".join(
+            [column.value if column.value != cfg.Reviews.ID.value else "" for column in cfg.Reviews]
+        )[1:]
+
         add_book_data = f"""
-            INSERT INTO {cfg.DatabaseTables.BOOKS.value}(title, author, genre, year_published, summary) VALUES (
+            INSERT INTO {cfg.DatabaseTables.BOOKS.value}({book_columns}) VALUES (
                 'The Story of You - Bio Computer', 'Kura Venkateswara Reddy', 'Science',
                 '2021-03-08', 'Our intent is to bring a quest in knowing “YOU”, by yourself in the form of the book The Story of You - Bio Computer. It is the first step in putting tiny wisdom through a lens of Spirituality, Science, History and Digital technologies. This book is for everyone, transcending geographies, organizations, governments, religions, languages, caste, countries, rich, poor, and so on. If you are not spending enough time to understand scientifically Who “YOU” are then you are wasting your life, irrespective of whatever the position, power, role, status and wealth etc. you hold in the external world. You are an individual Bio Computer in a complex web -controlled by Artificial Intelligence and 10 programs through seven bodies of YOU. It is possible to change some of these programs, and other global programs that need to be de-clutched and configured to the right IP address. One of the purposes of this book is to make you realize intellectually that, as an individual edge device or Bio Computer YOU are helpless, and YOU must realize that there is “NO YOU “. That is when you surrender with true wisdom. This is a magnificent creation and evolved over billions of years. If you are not experiencing this creation and higher levels of Consciousness, you are just dying like a worm. Make use of the remaining few years of your life. Firstly, try to become awakened and live the life of an enlightened being while you are on this planet. Human beings are designed to be enlightened. Secondly this could be the last life on this planet for you.'
             ), (
@@ -64,7 +71,7 @@ class CreateData():
         """
 
         add_review_data = f"""
-            INSERT INTO {cfg.DatabaseTables.REVIEWS.value}(book_id, user_id, review_text, rating) VALUES (
+            INSERT INTO {cfg.DatabaseTables.REVIEWS.value}({review_columns}) VALUES (
                 '1', '1', 'Author has put in integrated wisdom across many subjects and we realize Oneness in all these fields. I had lot of confusion about enlightenment and after death what next etc. After going through one Chapter in this book Consciousness – now I could understand intellectually, scientifically what this all about Awakening, Enlightenment, Oneness and Light being and what should we purse as objective after our death – attaining Moksha. Thank You. I want enlarge these color diagrams and laminate them. Beautifully explained through color pictures, worth gifting. I wish this book should be ETERNAL for humanity.', '5'
             ), (
                 '1', '2', 'Excellent book in connecting quantum mechanics, vibrations,fractals, epigenetics, Digital technologies like Cloud, AI, VR, and Spirituality . Spirituality is the Science, this should have been a compulsory subject that every student on this Planet to go through in High School studies . It is a greatest gift for the present and future generations. Please give this book as gift to children , even before you read.', '5'
