@@ -131,10 +131,11 @@ class CreateData():
         await self.connection.execute(add_review_data)
 
     async def drop_tables(self) -> None:
+        """ function to drop tables if already exists """
         try:
             await self.connection.execute(f"DROP TABLE {cfg.DatabaseTables.REVIEWS.value};")
             await self.connection.execute(f"DROP TABLE {cfg.DatabaseTables.BOOKS.value};")
-        except:
+        except Exception:
             lg.debug(" Required tables do not exist")
 
     async def run(self) -> None:

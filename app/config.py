@@ -10,7 +10,7 @@ DATABASE_USER_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
 DATABASE_NAME = os.environ.get("POSTGRES_DB")
 DATABASE_SERVICE = os.environ.get("POSTGRES_SERVICE")
 
-# DATABASE TABLES
+# DATABASE CONFIGURATION SETTINGS
 class DatabaseTables(Enum):
     """ class to store all tables in database """
     BOOKS = "books"
@@ -39,3 +39,6 @@ class Ratings(Enum):
     THREE = 3
     FOUR = 4
     FIVE = 5
+
+BOOKS_COLUMNS = ["ID", "Title", "Author", "Genre", "Year", "Summary"]
+REVIEWS_COLUMNS = ["ID", "Book ID", "User ID", "Review", "Rating"]
