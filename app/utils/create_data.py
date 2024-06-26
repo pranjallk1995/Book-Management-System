@@ -22,25 +22,25 @@ class CreateData():
 
         create_book_table = f"""
             CREATE TABLE IF NOT EXISTS {cfg.DatabaseTables.BOOKS.value}(
-                id serial PRIMARY KEY,
-                title varchar(255) NOT NULL,
-                author varchar(255) NOT NULL,
-                genre varchar(20),
-                year_published DATE,
-                summary varchar(8000),
-                CONSTRAINT check_genre CHECK (genre IN ({genres}))
+                {cfg.Books.ID.value} serial PRIMARY KEY,
+                {cfg.Books.TITLE.value} varchar(255) NOT NULL,
+                {cfg.Books.AUTHOR.value} varchar(255) NOT NULL,
+                {cfg.Books.GENRE.value} varchar(20),
+                {cfg.Books.YEAR.value} DATE,
+                {cfg.Books.SUMMARY.value} varchar(8000),
+                CONSTRAINT check_genre CHECK ({cfg.Books.GENRE.value} IN ({genres}))
             );
         """
 
         create_reviews_table = f"""
             CREATE TABLE IF NOT EXISTS {cfg.DatabaseTables.REVIEWS.value}(
-                id serial PRIMARY KEY,
-                book_id int,
-                user_id int NOT NULL,
-                review_text varchar(8000),
-                rating int,
-                FOREIGN KEY (book_id) REFERENCES books(id),
-                CONSTRAINT check_rating CHECK (rating IN ({ratings}))
+                {cfg.Reviews.ID.value} serial PRIMARY KEY,
+                {cfg.Reviews.BOOK_ID.value} int,
+                {cfg.Reviews.USER_ID.value} int NOT NULL,
+                {cfg.Reviews.REVIEW.value} varchar(8000),
+                {cfg.Reviews.RATING.value} int,
+                FOREIGN KEY ({cfg.Reviews.BOOK_ID.value}) REFERENCES {cfg.DatabaseTables.BOOKS.value}({cfg.Books.ID.value}),
+                CONSTRAINT check_rating CHECK ({cfg.Reviews.RATING.value} IN ({ratings}))
             );
         """
 
@@ -146,7 +146,11 @@ class CreateData():
         if self.connection is not None:
             await self.drop_tables()
             await self.create_tables()
-            lg.debug(" Fresh tables %s and %s created", cfg.DatabaseTables.BOOKS.value, cfg.DatabaseTables.REVIEWS.value)
+            lg.debug(
+                " Fresh tables %s and %s created",
+                cfg.DatabaseTables.BOOKS.value,
+                cfg.DatabaseTables.REVIEWS.value
+            )
             await self.create_data()
             lg.debug(" Default data added to the tables")
             lg.info(" Database restored to default state")

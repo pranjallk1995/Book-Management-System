@@ -3,13 +3,17 @@
 import asyncio
 import logging
 
-from utils.create_data import CreateData
 from utils.create_webpage import CreateWebpage
+from utils.manage_database import DatabaseHandler
 
-if __name__ == "__main__":
+async def run_app():
+    """ function to start the app execution """
     logging.basicConfig(level=logging.INFO, filename="run.log", filemode="w")
 
-    data_creator = CreateData()
-    asyncio.run(data_creator.run())
+    data_handler = DatabaseHandler()
+    await data_handler.run()
 
-    CreateWebpage(data_creator).show_frontend()
+    await CreateWebpage(data_handler).show_frontend()
+
+if __name__ == "__main__":
+    asyncio.run(run_app())
