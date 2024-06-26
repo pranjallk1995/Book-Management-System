@@ -1,4 +1,4 @@
-""" module to access data from database """
+""" module to access all data from database """
 
 import pandas as pd
 import config as cfg
