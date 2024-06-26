@@ -1,7 +1,5 @@
 """ module to create the frontend page """
 
-import asyncio
-
 import config as cfg
 import streamlit as st
 
