@@ -3,6 +3,7 @@
 import asyncio
 import logging
 
+from llmama3 import Llama3Model
 from settings.create_data import CreateData
 
 async def create_database():
@@ -14,4 +15,5 @@ async def create_database():
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, filename="run.log", filemode="w")
+    model = Llama3Model()
     asyncio.run(create_database())
