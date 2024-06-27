@@ -67,7 +67,7 @@ class CreateData():
             ), (
                 'Stop Overthinking', 'Nick Trenton', 'Science',
                 '2021-01-01', 'Break free of your self-imposed mental prison. Stop agonizing over the past and trying to predict the future. Overthinking is the biggest cause of unhappiness and staying in a never-ending thought loop is the biggest cause of unhappiness. Stop Overthinking is a book that understands the exhausting situation you have put yourself in, and how you lose your mind with anxiety and stress. It will walk you through detailed and proven techniques to help rewire your brain, control your thoughts, and change your mental habits.'
-            );
+            )
         """
 
         add_review_data = f"""
@@ -87,11 +87,14 @@ class CreateData():
                 '3', '5', 'The quality of the pages is not good. The marks for the words of the other page can be seen on the current one.', '3'
             ), (
                 '3', '6', 'Nice book', '5'
-            );
+            )
         """
 
-        await self.connection.execute(add_book_data)
-        await self.connection.execute(add_review_data)
+        try:
+            await self.connection.execute(add_book_data)
+            await self.connection.execute(add_review_data)
+        except Exception:
+            lg.debug(" Required tables already exist")
 
     async def drop_tables(self) -> None:
         """ function to drop tables if already exists """
