@@ -7,6 +7,19 @@ x-user-credentials: &database-authentication
 
 services:
 
+  book-manager-init:
+    image: tensorflow/book-manager:v0.0.1
+    container_name: book-manager-app-init
+    environment:
+      <<: *database-authentication
+      POSTGRES_SERVICE: postgres-database
+    networks:
+      - book-network
+    depends_on:
+      - postgres-database
+    working_dir: /app/settings
+    command: ["python3", "-m", "run"]
+
   book-manager:
     image: tensorflow/book-manager:v0.0.1
     container_name: book-manager-app
