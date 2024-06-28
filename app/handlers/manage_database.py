@@ -2,6 +2,8 @@
 
 import config as cfg
 import asyncpg as apg
+import streamlit as st
+
 class DatabaseHandler():
     """ module to handle interactions with the database """
 
@@ -59,17 +61,20 @@ class DatabaseHandler():
             """
             await self.connection.execute(remove_review)
         elif table_name == cfg.DatabaseTables.BOOKS:
-            book_id = await self.get_bookid(book_title)
-            remove_reviews = f"""
-                DELETE FROM {cfg.DatabaseTables.REVIEWS.value}
-                WHERE {cfg.Reviews.BOOK_ID.value} = '{book_id}'
-            """
-            await self.connection.execute(remove_reviews)
-            remove_book = f"""
-                DELETE FROM {cfg.DatabaseTables.BOOKS.value}
-                WHERE {cfg.Books.TITLE.value} = '{book_title}'
-            """
-            await self.connection.execute(remove_book)
+            try:
+                book_id = await self.get_bookid(book_title)
+                remove_reviews = f"""
+                    DELETE FROM {cfg.DatabaseTables.REVIEWS.value}
+                    WHERE {cfg.Reviews.BOOK_ID.value} = '{book_id}'
+                """
+                await self.connection.execute(remove_reviews)
+                remove_book = f"""
+                    DELETE FROM {cfg.DatabaseTables.BOOKS.value}
+                    WHERE {cfg.Books.TITLE.value} = '{book_title}'
+                """
+                await self.connection.execute(remove_book)
+            except Exception:
+                st.toast("Book does not exist")
 
     # ======================================================================================
     # Get specific data
