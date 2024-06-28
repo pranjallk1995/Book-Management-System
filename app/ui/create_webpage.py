@@ -17,6 +17,10 @@ class CreateWebpage():
         self.data_handler = data_handler
         self.reset = CreateData()
 
+    # ======================================================================================
+    # UI update Divs
+    # ======================================================================================
+
     async def make_remove_bookdiv(self) -> None:
         """ function to update the maindev when remove book is selected """
         with st.form("remove_book"):
@@ -98,6 +102,10 @@ class CreateWebpage():
                 await self.data_handler.add_data(cfg.DatabaseTables.REVIEWS, review_data)
                 st.toast("Your review is added. Refresh Page")
 
+    # ======================================================================================
+    # UI sidebar Div
+    # ======================================================================================
+
     async def make_sidebar(self) -> None:
         """ function to create the sidebar of the UI """
         st.sidebar.title("Book Store".upper())
@@ -138,6 +146,10 @@ class CreateWebpage():
             user_review = await self.data_handler.get_review(book_selected)
             if user_review is None:
                 await self.make_reviewdiv(book_selected)
+
+    # ======================================================================================
+    # UI main Div
+    # ======================================================================================
 
     async def make_maindiv(self) -> None:
         """ function to create the main central div in the UI """
