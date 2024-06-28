@@ -46,7 +46,6 @@ class DatabaseHandler():
         add_data = f"""
             INSERT INTO {table_name.value}({columns}) VALUES ({values})
         """
-        print(add_data)
         await self.connection.execute(add_data)
 
     async def remove_data(self, table_name: cfg.DatabaseTables, book_title: str) -> None:
@@ -60,6 +59,12 @@ class DatabaseHandler():
             """
             await self.connection.execute(remove_review)
         elif table_name == cfg.DatabaseTables.BOOKS:
+            book_id = await self.get_bookid(book_title)
+            remove_reviews = f"""
+                DELETE FROM {cfg.DatabaseTables.REVIEWS.value}
+                WHERE {cfg.Reviews.BOOK_ID.value} = '{book_id}'
+            """
+            await self.connection.execute(remove_reviews)
             remove_book = f"""
                 DELETE FROM {cfg.DatabaseTables.BOOKS.value}
                 WHERE {cfg.Books.TITLE.value} = '{book_title}'
