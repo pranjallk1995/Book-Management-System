@@ -60,5 +60,7 @@ class Reviews(Enum):
 BOOKS_COLUMNS = ["ID", "Title", "Author", "Genre", "Year", "Summary"]
 REVIEWS_COLUMNS = ["ID", "Book ID", "User ID", "Review", "Rating"]
 
+MAX_SUMMARY_SIZE = 5000
+
 # USER CREDENTIALS
 USER_ID = "100"

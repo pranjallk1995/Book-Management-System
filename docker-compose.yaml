@@ -11,7 +11,7 @@ services:
     image: tensorflow/book-manager:v0.0.1
     container_name: book-manager-init
     build:
-      dockerfile: ./Dockerfile.app
+      dockerfile: ./Dockerfile.init
     environment:
       <<: *database-authentication
       POSTGRES_SERVICE: postgres-database
@@ -19,8 +19,9 @@ services:
       - book-network
     depends_on:
       - postgres-database
-    working_dir: /app/settings
-    command: ["python3", "-m", "run"]
+    volumes:
+      - ./app:/app
+    command: ["python3", "-m", "settings.run"]
 
   book-manager:
     image: tensorflow/book-manager:v0.0.1
@@ -30,8 +31,8 @@ services:
       POSTGRES_SERVICE: postgres-database
     networks:
       - book-network
-    volumes:
-      - ./app:/app
+    volumes_from:
+      - book-manager-init
     depends_on:
       - book-manager-init
     ports:
