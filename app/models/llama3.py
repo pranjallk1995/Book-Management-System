@@ -8,7 +8,6 @@
 
 # def get_book_summary(book_title: str, book_author: str) -> str:
 #     """ function to respond with the book summary """
-#     print("IN")
 #     return model.prompt(
 #         f"Summerize {book_title} from {book_author} within {cfg.MAX_SUMMARY_SIZE} words"
 #     )

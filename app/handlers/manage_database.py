@@ -1,6 +1,5 @@
 """ module to interact with the databse """
 
-import streamlit as st
 import config as cfg
 import asyncpg as apg
 class DatabaseHandler():
