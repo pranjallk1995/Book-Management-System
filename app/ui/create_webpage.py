@@ -60,26 +60,9 @@ class CreateWebpage():
                 book_data[cfg.Books.AUTHOR.value] = author
                 book_data[cfg.Books.GENRE.value] = genre
                 book_data[cfg.Books.YEAR.value] = date
-                book_data[cfg.Books.SUMMARY.value] = "Summary"
-                print(book_data)
+                book_data[cfg.Books.SUMMARY.value] = "Summary should have come from Llama3 :("
                 await self.data_handler.add_data(cfg.DatabaseTables.BOOKS, book_data)
                 st.toast("Your book is added. Refresh Page")
-
-    async def make_show_bookdiv(self, book: str) -> str:
-        """ function to update the maindiv when a book is selected """
-        st.title(book.upper())
-        all_reviews = await self.data_handler.get_all_reviews(book)
-        st.subheader("Reviews")
-        for user_id, review in all_reviews:
-            if str(user_id) == cfg.USER_ID:
-                with st.form("user_review"):
-                    st.error(review)
-                    delete = st.form_submit_button("Delete", type="primary")
-                    if delete:
-                        await self.data_handler.remove_data(cfg.DatabaseTables.REVIEWS, book)
-                        st.toast("Your review was deleted. Refresh Page")
-            else:
-                st.error(review)
 
     async def make_reviewdiv(self, book_title: str) -> None:
         """ function to add a review text area """
@@ -102,6 +85,22 @@ class CreateWebpage():
                 await self.data_handler.add_data(cfg.DatabaseTables.REVIEWS, review_data)
                 st.toast("Your review is added. Refresh Page")
 
+    async def make_show_bookdiv(self, book: str) -> str:
+        """ function to update the maindiv when a book is selected """
+        st.title(book.upper())
+        all_reviews = await self.data_handler.get_all_reviews(book)
+        st.subheader("Reviews")
+        for user_id, review in all_reviews:
+            if str(user_id) == cfg.USER_ID:
+                with st.form("user_review"):
+                    st.error(review)
+                    delete = st.form_submit_button("Delete", type="primary")
+                    if delete:
+                        await self.data_handler.remove_data(cfg.DatabaseTables.REVIEWS, book)
+                        st.toast("Your review was deleted. Refresh Page")
+            else:
+                st.error(review)
+
     # ======================================================================================
     # UI sidebar Div
     # ======================================================================================
@@ -114,16 +113,19 @@ class CreateWebpage():
 
         for _ in range(1, 4):
             st.sidebar.write("\n")
-        st.sidebar.subheader("Manage Book")
-        add_book = st.sidebar.button("Add Book", use_container_width=True)
-        remove_book = st.sidebar.button("Remove Book", use_container_width=True)
+        st.sidebar.subheader("Manage Books")
+
+        action_selected = st.sidebar.selectbox(
+            "Select your action:", [action for action in cfg.MANAGE_BOOK_ACTIONS.values()], index=None,
+            placeholder="Select...", label_visibility="hidden"
+        )
 
         all_books = await self.data_handler.get_all_books()
         st.sidebar.divider()
         st.sidebar.subheader("Select Your Book")
         book_selected = st.sidebar.selectbox(
             "Select your book:", all_books, index=None,
-            placeholder="Your Book", label_visibility="hidden"
+            placeholder="Your Book...", label_visibility="hidden"
         )
 
         # ===========================================================================
@@ -135,17 +137,20 @@ class CreateWebpage():
             await self.reset.run()
             st.toast("Database set to initial default value. Refresh Page")
 
-        if book_selected is None and not add_book and not remove_book:
+        if book_selected is None and action_selected is None:
             await self.make_maindiv()
-        elif add_book:
-            await self.make_add_bookdiv()
-        elif remove_book:
-            await self.make_remove_bookdiv()
-        elif book_selected is not None:
+        elif action_selected is not None and book_selected is None:
+            if action_selected == cfg.MANAGE_BOOK_ACTIONS["add"]:
+                await self.make_add_bookdiv()
+            elif action_selected == cfg.MANAGE_BOOK_ACTIONS["remove"]:
+                await self.make_remove_bookdiv()
+        elif book_selected is not None and action_selected is None:
             await self.make_show_bookdiv(book_selected)
             user_review = await self.data_handler.get_review(book_selected)
             if user_review is None:
                 await self.make_reviewdiv(book_selected)
+        else:
+            st.toast("Either select a book or manage book option")
 
     # ======================================================================================
     # UI main Div
