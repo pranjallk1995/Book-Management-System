@@ -20,7 +20,7 @@ services:
     depends_on:
       - postgres-database
     volumes:
-      - ./app:/app
+      - ./app:/app 
     command: ["python3", "-m", "settings.run"]
 
   book-manager:
@@ -34,7 +34,8 @@ services:
     volumes_from:
       - book-manager-init
     depends_on:
-      - book-manager-init
+      book-manager-init:
+        condition: service_completed_successfully
     ports:
       - 15000:5000
     deploy:
