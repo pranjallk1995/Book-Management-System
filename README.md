@@ -9,8 +9,9 @@ A sample book management system for JKTech assessment.
 ## Instructions
 
 *Prerequisites:*
-1. docker
-2. gpu - otherwise comment the deploy property in book-manager-app service
+1. git
+2. docker
+3. gpu - otherwise comment the deploy property in book-manager-app service
 
 ```
 git clone git@github.com:pranjallk1995/Book-Management-System.git
