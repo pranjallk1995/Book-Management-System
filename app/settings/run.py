@@ -1,4 +1,4 @@
-""" app entrypoint """
+""" app defualt database and model setup """
 
 import asyncio
 import logging
